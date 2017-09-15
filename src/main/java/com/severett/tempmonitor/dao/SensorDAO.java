@@ -17,5 +17,6 @@ public interface SensorDAO {
     
     List<TemperatureReading> getLastWeekTemperatureReadings(String sensorUuid) throws InvalidSensorException;
     
+    List<TemperatureReading> getLastThirtyDaysTemperatureReadings(String sensorUuid) throws InvalidSensorException;
 
 }
