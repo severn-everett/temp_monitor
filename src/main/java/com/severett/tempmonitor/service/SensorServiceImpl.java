@@ -1,5 +1,6 @@
 package com.severett.tempmonitor.service;
 
+import com.severett.tempmonitor.config.TempConfigurationProperties;
 import com.severett.tempmonitor.dao.SensorDAO;
 import com.severett.tempmonitor.dto.SensorEventsDto;
 import com.severett.tempmonitor.dto.SensorMetricsDto;
@@ -18,17 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class SensorServiceImpl implements SensorService {
     
-    private final Double TEMP_CEILING = 95.0;
-    
-    private final Integer EVENT_THRESHOLD = 3;
-    
     private final Map<String, List<TemperatureReading>> excedeTempCountMap;
     
     private final SensorDAO sensorDao;
+    private final TempConfigurationProperties tempProperties;
     
     @Autowired
-    public SensorServiceImpl(SensorDAO sensorDAO) {
+    public SensorServiceImpl(SensorDAO sensorDAO, TempConfigurationProperties tempProperties) {
         this.sensorDao = sensorDAO;
+        this.tempProperties = tempProperties;
         this.excedeTempCountMap = new ConcurrentHashMap<>();
     }
     
@@ -36,12 +35,12 @@ public class SensorServiceImpl implements SensorService {
     public void registerTemperature(String sensorUuid, Double temperature) {
         TemperatureReading tempReading = new TemperatureReading(Instant.now(), temperature);
         sensorDao.addTemperatureReading(sensorUuid, tempReading);
-        if (tempReading.getTemperature().compareTo(TEMP_CEILING) > 0) {
+        if (tempReading.getTemperature().compareTo(tempProperties.getTempThreshold()) > 0) {
             excedeTempCountMap.putIfAbsent(sensorUuid, new LinkedList<>());
             List<TemperatureReading> excedeTempList = excedeTempCountMap.get(sensorUuid);
             synchronized (excedeTempList) {
                 excedeTempList.add(tempReading);
-                if (excedeTempList.size() == EVENT_THRESHOLD) {
+                if (excedeTempList.size() == tempProperties.getEventRepeatThreshold()) {
                     sensorDao.addEvent(sensorUuid, new Event(excedeTempList.get(0)));
                 }
             }

@@ -1,5 +1,6 @@
 package com.severett.tempmonitor.service;
 
+import com.severett.tempmonitor.config.TempConfigurationProperties;
 import com.severett.tempmonitor.dao.SensorDAO;
 import com.severett.tempmonitor.dto.SensorMetricsDto;
 import com.severett.tempmonitor.exceptions.InvalidSensorException;
@@ -23,11 +24,13 @@ public class SensorServiceTest {
     @Mock
     SensorDAO sensorDAO;
     
+    TempConfigurationProperties tempConfigurationProperties = new TempConfigurationProperties();
+    
     SensorService sensorService;
     
     @Before
     public void setup() {
-        sensorService = new SensorServiceImpl(sensorDAO);
+        sensorService = new SensorServiceImpl(sensorDAO, tempConfigurationProperties);
     }
     
     @Test
