@@ -1,5 +1,6 @@
 package com.severett.tempmonitor.config;
 
+import javax.validation.constraints.Min;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Component;
 public class TempConfigurationProperties {
     
     private double tempThreshold = 95.0;
+    
+    @Min(1)
     private int eventRepeatThreshold = 3;
     
     public TempConfigurationProperties() {
