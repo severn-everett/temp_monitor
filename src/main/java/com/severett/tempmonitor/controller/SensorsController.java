@@ -29,8 +29,12 @@ public class SensorsController {
     
     private static final String SUCCESS_KEY = "success";
     
+    private final SensorService sensorService;
+    
     @Autowired
-    SensorService sensorService;
+    public SensorsController(SensorService sensorService) {
+        this.sensorService = sensorService;
+    }
     
     @RequestMapping(value="/{uuid}/measurements", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> uploadMeasurement(@PathVariable("uuid") String sensorUuid, @RequestBody String requestBody) {
