@@ -14,6 +14,10 @@ public class Event {
         this.temperature = temperature;
     }
     
+    public Event(Instant at, Double temperature) {
+        this("TEMPERATURE_EXCEEDED", at, temperature);
+    }
+    
     public String getType() {
         return type;
     }
