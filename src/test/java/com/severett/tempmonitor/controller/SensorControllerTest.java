@@ -3,6 +3,7 @@ package com.severett.tempmonitor.controller;
 import com.severett.tempmonitor.dto.SensorEventsDto;
 import com.severett.tempmonitor.dto.SensorMetricsDto;
 import com.severett.tempmonitor.model.Event;
+import com.severett.tempmonitor.model.TemperatureReading;
 import com.severett.tempmonitor.service.SensorService;
 import java.time.Duration;
 import java.time.Instant;
@@ -82,8 +83,8 @@ public class SensorControllerTest {
     
     @Test
     public void getEventsTest() throws Exception {
-        Event twoDaysAgoEvent = new Event(Instant.now().minus(Duration.ofDays(2)), 36.0);
-        Event todayEvent = new Event(Instant.now(), 37.0);
+        Event twoDaysAgoEvent = new Event(new TemperatureReading(Instant.now().minus(Duration.ofDays(2)), 36.0));
+        Event todayEvent = new Event(new TemperatureReading(Instant.now(), 37.0));
         SensorEventsDto sensorEvents = new SensorEventsDto("abc123", Arrays.asList(twoDaysAgoEvent, todayEvent));
         given(sensorService.getSensorEvents(anyString()))
                 .willReturn(Optional.of(sensorEvents));
